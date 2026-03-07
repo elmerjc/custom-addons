@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="create_db_form" name="Create Database">
+        <t t-call="website.layout">
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <h3 class="card-title mb-0">Crear Nueva Base de Datos</h3>
+                            </div>
+                            <div class="card-body">
+                                <t t-if="error">
+                                    <div class="alert alert-danger" role="alert">
+                                        <t t-esc="error"/>
+                                    </div>
+                                </t>
+                                <form action="/saas/create_db/submit" method="post">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    
+                                    <div class="mb-3">
+                                        <label for="db_name" class="form-label">Nombre de la Base de Datos</label>
+                                        <input type="text" class="form-control" id="db_name" name="db_name" required="required" placeholder="ej. mi_empresa_db"/>
+                                        <div class="form-text">Debe ser único.</div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="admin_password" class="form-label">Contraseña de Admin</label>
+                                        <input type="password" class="form-control" id="admin_password" name="admin_password" required="required"/>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Idioma por defecto</label>
+                                        <input type="text" class="form-control" value="Español (Perú)" disabled="disabled"/>
+                                    </div>
+
+                                    <div class="d-grid gap-2">
+                                        <button type="submit" class="btn btn-primary">Crear Base de Datos</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="create_db_success" name="Database Created">
+        <t t-call="website.layout">
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                <h3 class="card-title mb-0">¡Éxito!</h3>
+                            </div>
+                            <div class="card-body text-center">
+                                <div class="alert alert-success" role="alert">
+                                    La base de datos <strong t-esc="db_name"/> ha sido creada correctamente.
+                                </div>
+                                <p>El usuario administrador es <strong>admin</strong>.</p>
+                                <p>Idioma configurado: <strong>Español (Perú)</strong>.</p>
+                                <a href="/saas/create_db" class="btn btn-secondary mt-3">Crear Otra</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="inherit_product_template_only_form_view" model="ir.ui.view">
+        <field name="name">inherit.product.template.only</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='default_code']" position="after">
+                <field name="model"/>
+                <field name="statement"/>
+                <field name="container"/>
+                <field name="receipt"/>
+                <field name="item"/>
+            </xpath>
+        </field>
+    </record>
+    
+    <record id="inherit_product_normal_form_view" model="ir.ui.view">
+        <field name="name">inherit.product.normal.form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='default_code']" position="after">
+                <field name="model"/>
+                <field name="statement"/>
+                <field name="container"/>
+                <field name="receipt"/>
+                <field name="item"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_product_template_tree_view" model="ir.ui.view">
+        <field name="name">inherit.product.template.tree</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_tree_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="statement"/>
+                <field name="container"/>
+                <field name="receipt"/>
+                <field name="item"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_product_template_search_view" model="ir.ui.view">
+        <field name="name">inherit.product.template.search</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field string="Recibo" name="receipt" filter_domain="[('receipt','ilike',self)]"/>
+                <field string="Container" name="container" filter_domain="[('container','ilike',self)]"/>
+            </xpath>
+            <xpath expr="//filter[@name='type']" position="before">
+                <filter string="Recibo" name="container" context="{'group_by': 'container'}"/>
+                <filter string="Container" name="receipt" context="{'group_by': 'receipt'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

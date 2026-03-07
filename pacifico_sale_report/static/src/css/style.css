@@ -1,0 +1,97 @@
+.table-custom {
+    border: 1px solid black;
+    border-collapse: separate;
+    border-radius: 7px;
+    border-spacing: 0;
+    overflow: hidden;
+    width: 100%;
+}
+
+.table-custom thead {
+    font-size: 10px;
+    vertical-align: middle;
+    text-transform: uppercase;
+}
+
+.table-custom th {
+    border: 0px;
+    color: white;
+    padding: 8px;
+    vertical-align: middle;
+}
+
+.table-custom td {
+    padding: 8px;
+    vertical-align: top;
+}
+
+.table-custom .line-section {
+    padding: 0 8px;
+}
+
+.table-custom tr:first-child th:first-child {
+    border-top-left-radius: 7px;
+}
+
+.table-custom tr:first-child th:last-child {
+    border-top-right-radius: 7px;
+}
+
+.table-custom tr:last-child td:first-child {
+    border-bottom-left-radius: 7px;
+}
+
+.table-custom tr:last-child td:last-child {
+    border-bottom-right-radius: 7px;
+}
+
+.border-radius {
+    border: 1px solid black;
+    border-radius: 7px;
+}
+
+.table-border {
+    border: 1px solid black;
+    border-collapse: separate;
+    border-radius: 7px;
+    border-spacing: 0;
+    overflow: hidden;
+    vertical-align: middle;
+    width: 100%;
+}
+
+.table-border td {
+    padding: 5px;
+}
+
+.table-cuotas {
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+    vertical-align: middle;
+    width: 100%;
+}
+
+.table-cuotas td {
+    padding: 5px;
+}
+
+.text-12,
+.text-12 span {
+    font-size: 12px;
+}
+
+.text-11,
+.text-11 span {
+    font-size: 11px;
+}
+
+.text-10,
+.text-10 span {
+    font-size: 10px;
+}
+
+.text-9,
+.text-9 span {
+    font-size: 9px;
+}

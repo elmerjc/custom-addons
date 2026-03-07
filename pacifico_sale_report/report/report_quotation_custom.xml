@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_quotation_custom">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="pacifico_sale_report.quotation_layout_custom">
+                    <t t-set="discount" t-value="0"/>
+                    <t t-set="discount_total" t-value="0"/>
+                    <t t-set="quantity_total" t-value="0"/>
+                    <t t-foreach="o.order_line" t-as="l">
+                        <t t-if="l.discount">
+                            <t t-set="discount" t-value="1"/>
+                            <t t-set="discount_total" t-value="discount_total + ((l.discount/100)*l.price_unit*l.product_uom_qty)"/>
+                        </t>
+                        <t t-set="quantity_total" t-value="quantity_total + l.product_uom_qty"/>
+                    </t>
+
+                    <div id="header" class="row border-radius text-12 p-2">
+                        <div class="col-8">
+                            <dl class="row mb-0">
+                                <dt class="col-2 mb-0">
+                                    <strong>Sr (es):</strong>
+                                </dt>
+                                <dd class="col-10 mb-0">
+                                    <span t-field="o.partner_id.name"/>
+                                </dd>
+                            </dl>
+                            <dl class="row mb-0">
+                                <dt class="col-2 mb-0">
+                                    <strong>Direccion:</strong>
+                                </dt>
+                                <dd class="col-10 mb-0">
+                                    <span t-field="o.partner_id.street"/>
+                                </dd>
+                            </dl>
+                            <dl class="row mb-0">
+                                <dt class="col-2 mb-0">
+                                    <strong>Vendedor:</strong>
+                                </dt>
+                                <dd class="col-10 mb-0">
+                                    <span t-field="o.user_id.name"/>
+                                </dd>
+                            </dl>
+                        </div>
+                        <div class="col-4">
+                            <dl class="row mb-0">
+                                <dt class="col-4 mb-0">
+                                    <strong>Número de documento:</strong>
+                                </dt>
+                                <dd class="col-8 mb-0">
+                                    <span class="text-nowrap" t-field="o.partner_id.vat"/>
+                                </dd>
+                            </dl>
+                            <dl class="row mb-0">
+                                <dt class="col-4 mb-0">
+                                    <strong>Teléfono:</strong>
+                                </dt>
+                                <dd class="col-8 mb-0">
+                                    <span class="text-nowrap" t-field="o.partner_id.phone"/>
+                                </dd>
+                            </dl>
+                            <dl t-if="o.validity_date" class="row mb-0">
+                                <dt class="col-4 mb-0">
+                                    <strong>Expiración:</strong>
+                                </dt>
+                                <dd class="col-8 mb-0">
+                                    <span class="text-nowrap" t-esc="o.validity_date" t-options='{"widget": "date","format": "dd-MM-yyyy"}'/>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div id="body" class="text-12 mt-2">
+                        <table class="table-custom mb-2" name="table_lines">
+                            <thead>
+                                <th name="th_item" class="text-start"
+                                    t-att-style="'width:3%;' + 'background-color: %s;' % o.company_id.primary_color or 'black'">Item</th>
+                                <th name="th_product" class="text-start"
+                                    t-att-style="'width:50%;' + 'background-color: %s;' % o.company_id.primary_color or 'black'">Producto</th>
+                                <th name="th_quantity" class="text-end"
+                                    t-att-style="'width:5%;' + 'background-color: %s;' % o.company_id.primary_color or 'black'">Cant.</th>
+                                <th name="th_price_unit" class="text-end"
+                                    t-att-style="'width:5%;' + 'background-color: %s;' % o.company_id.primary_color or 'black'">Precio</th>
+                                <th name="th_subtotal" class="text-end"
+                                    t-att-style="'width:5%;' + 'background-color: %s;' % o.company_id.primary_color or 'black'">Importe</th>
+                            </thead>
+                            <tbody>
+                                <t t-set="item" t-value="0"/>
+                                <tr t-foreach="o.order_line" t-as="l">
+                                    <t t-set="item" t-value="item + 1"/>
+                                    <td>
+                                        <span t-esc="item"/>
+                                    </td>
+                                    <td name="td_product_description">
+                                        <span t-field="l.name"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-esc="int(l.product_uom_qty)" />
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="l.price_unit"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="l.price_total" t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="row text-12 mt-1" style="page-break-inside: avoid;">
+                        <div class="col-4 offset-8">
+                            <table class="table-border" name="table_totals" style="width:100%;">
+                                <tr class="border-black o_subtotal">
+                                    <td><strong t-att-style="'color: %s;' % o.company_id.primary_color or 'black'">Cantidad Total</strong></td>
+                                    <td class="text-end">
+                                        <span t-esc="int(quantity_total)"/>
+                                    </td>
+                                </tr>
+                                <tr class="border-black o_subtotal">
+                                    <td><strong t-att-style="'color: %s;' % o.company_id.primary_color or 'black'">Total</strong></td>
+                                    <td class="text-end">
+                                        <span t-field="o.amount_total"
+                                            t-options='{"widget": "monetary", "display_currency": o.pricelist_id.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3" style="page-break-inside: avoid;">
+                        <div class="col-12">
+                            <h5>Cuentas bancarias:</h5>
+                            <div>
+                                <span>Banco: <b>BBVA</b></span>
+                                <br/>
+                                <span>Cuenta Corriente (Soles): 0011-0232-0201147117</span>
+                                <br/>
+                                <span>CCI (Soles): 011-232-000201147117-60</span>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

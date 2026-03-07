@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_delivery_pacifico">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h3>Detalle de Entrega: <span t-field="o.name"/></h3>
+                        <div class="row mt16">
+                            <div class="col-6">
+                                <strong>Pedido:</strong> <span t-field="o.origin"/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Cliente:</strong> <span t-field="o.partner_id"/>
+                            </div>
+                        </div>
+                        <div class="row mt16 mb32">
+                             <div class="col-6">
+                                <strong>Fecha Programada:</strong> <span t-field="o.scheduled_date"/>
+                            </div>
+                        </div>
+
+                        <table class="table table-sm o_main_table">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Container</th>
+                                    <th>Recibo</th>
+                                    <th>Item</th>
+                                    <th class="text-right">Cantidad</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="total_quantity" t-value="0"/>
+                                <t t-foreach="o.move_ids_without_package" t-as="move">
+                                    <tr>
+                                        <td><span t-field="move.product_id.display_name"/></td>
+                                        <td><span t-field="move.container"/></td>
+                                        <td><span t-field="move.receipt"/></td>
+                                        <td><span t-field="move.item"/></td>
+                                        <td class="text-right">
+                                            <span t-field="move.quantity"/> <span t-field="move.product_uom.name"/>
+                                        </td>
+                                    </tr>
+                                    <t t-set="total_quantity" t-value="total_quantity + move.quantity"/>
+                                </t>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4" class="text-right">Total:</td>
+                                    <td class="text-right"><span t-esc="total_quantity"/></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <div class="row mt32" style="page-break-inside: avoid;">
+                            <div class="col-12">
+                                <p class="text-sm font-italic text-justify">
+                                Una vez firmado el presente documento, se entenderá como entregado en conformidad, no admitiéndose posteriormente reclamos ni observaciones.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row mt64" style="page-break-inside: avoid;">
+                            <div class="col-6">
+                            </div>
+                            <div class="col-6 text-center mt64">
+                                <div style="border-top: 1px solid black; margin-top: 50px; width: 80%; margin-left: auto; margin-right: auto; padding-top: 10px;">
+                                    <strong><span t-field="o.partner_id.name"/></strong><br />
+                                    <strong><span t-field="o.partner_id.vat"/></strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="paperformat_delivery_pacifico" model="report.paperformat">
+        <field name="name">Paper Format Pacifico</field>
+        <field name="default" eval="True" />
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">40</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False" />
+        <field name="header_spacing">35</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="action_report_delivery_pacifico" model="ir.actions.report">
+        <field name="name">Detalle de Entrega</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">pacifico_base.report_delivery_pacifico</field>
+        <field name="report_file">pacifico_base.report_delivery_pacifico</field>
+        <field name="print_report_name">'Detalle de Entrega - %s - %s' % (object.origin, object.partner_id.name or '')</field>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_delivery_pacifico"/>
+    </record>
+</odoo>
