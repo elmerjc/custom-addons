@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="stock_picking_layout_custom">
+    <t t-if="not company">
+        <!-- Multicompany -->
+        <t t-if="company_id">
+            <t t-set="company" t-value="company_id"/>
+        </t>
+        <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+            <t t-set="company" t-value="o.company_id.sudo()"/>
+        </t>
+        <t t-else="else">
+            <t t-set="company" t-value="res_company"/>
+        </t>
+    </t>
+    <div class="page">
+        <t t-call="pacifico_base.stock_picking_layout_header_custom"/>
+        <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <t t-out="0"/>
+        </div>
+        <t t-call="pacifico_base.stock_picking_layout_footer_custom"/>
+    </div>
+  </template>
+
+  <template id="stock_picking_layout_header_custom">
+    <div class="header o_company_#{company.id}_layout">
+        <div class="row p-2">
+            <div class="col-2">
+                <img t-if="company.logo" style="max-width:120px; width:100%" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+            </div>
+            <div class="col-6">
+                <div class="row mb-0">
+                    <div class="col-12">
+                        <h6 t-if="company.partner_id.name" class="text-uppercase font-weight-bold text-12" t-esc="company.partner_id.name"/>
+                        <h6 t-if="company.partner_id.street" class="text-uppercase text-12" t-esc="company.partner_id.street"/>
+                        <h6 t-if="company.partner_id.mobile" class="text-uppercase text-12" t-esc="'CELULAR/WHATSAPP: ' + company.partner_id.mobile"/>
+                        <h6 t-if="company.partner_id.email" class="text-uppercase text-12" t-esc="'CORREO ELECTRÓNICO: ' + company.partner_id.email"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="text-center">
+                    <h5 class="font-weight-bold" t-esc="'ENTREGA N°'"/>
+                    <h5 class="font-weight-bold" t-esc="o.name"/>
+                </div>
+            </div>
+        </div>
+    </div>
+  </template>
+
+  <template id="stock_picking_layout_footer_custom">
+    <div class="footer">
+        <div class="text-center" style="border-top: 1px solid black;">
+            <center>
+            Página: <span class="page"/> / <span class="topage"/>
+            </center>
+        </div>
+    </div>
+  </template>
+</odoo>

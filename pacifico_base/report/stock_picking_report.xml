@@ -3,72 +3,98 @@
     <template id="report_delivery_pacifico">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
-                <t t-call="web.external_layout">
-                    <div class="page">
-                        <h3>Detalle de Entrega: <span t-field="o.name"/></h3>
-                        <div class="row mt16">
-                            <div class="col-6">
-                                <strong>Pedido:</strong> <span t-field="o.origin"/>
-                            </div>
-                            <div class="col-6">
-                                <strong>Cliente:</strong> <span t-field="o.partner_id"/>
-                            </div>
+                <t t-call="pacifico_base.stock_picking_layout_custom">
+                    <div id="header" class="row border-radius text-12 p-2">
+                        <div class="col-8">
+                            <dl class="row mb-0">
+                                <dt class="col-2 mb-0">
+                                    <strong>Pedido:</strong>
+                                </dt>
+                                <dd class="col-10 mb-0">
+                                    <span t-field="o.origin"/>
+                                </dd>
+                            </dl>
+                            <dl class="row mb-0">
+                                <dt class="col-2 mb-0">
+                                    <strong>Cliente:</strong>
+                                </dt>
+                                <dd class="col-10 mb-0">
+                                    <span t-field="o.partner_id.name"/>
+                                </dd>
+                            </dl>
                         </div>
-                        <div class="row mt16 mb32">
-                             <div class="col-6">
-                                <strong>Fecha Programada:</strong> <span t-field="o.scheduled_date"/>
-                            </div>
+                        <div class="col-4">
+                            <dl class="row mb-0">
+                                <dt class="col-4 mb-0">
+                                    <strong>Fecha Programada:</strong>
+                                </dt>
+                                <dd class="col-8 mb-0">
+                                    <span t-field="o.scheduled_date" t-options='{"widget": "date","format": "dd/MM/yyyy"}'/>
+                                </dd>
+                            </dl>
                         </div>
-
-                        <table class="table table-sm o_main_table">
+                    </div>
+                    <div id="body" class="text-14 mt-2">
+                        <table class="table-custom mb-2" name="table_lines">
                             <thead>
-                                <tr>
-                                    <th>Producto</th>
-                                    <th>Container</th>
-                                    <th>Recibo</th>
-                                    <th>Item</th>
-                                    <th class="text-right">Cantidad</th>
-                                </tr>
+                                <th name="th_item" class="text-start"
+                                    t-att-style="'width:3%;' + 'background-color: %s;' % o.company_id.primary_color or 'black'">Item</th>
+                                <th name="th_product" class="text-start"
+                                    t-att-style="'width:60%;' + 'background-color: %s;' % o.company_id.primary_color or 'black'">Producto</th>
+                                <th name="th_price_unit" class="text-end"
+                                    t-att-style="'width:5%;' + 'background-color: %s;' % o.company_id.primary_color or 'black'">Item</th>
+                                <th name="th_subtotal" class="text-end"
+                                    t-att-style="'width:10%;' + 'background-color: %s;' % o.company_id.primary_color or 'black'">Cantidad</th>
                             </thead>
                             <tbody>
+                                <t t-set="item" t-value="0"/>
                                 <t t-set="total_quantity" t-value="0"/>
-                                <t t-foreach="o.move_ids_without_package" t-as="move">
-                                    <tr>
-                                        <td><span t-field="move.product_id.display_name"/></td>
-                                        <td><span t-field="move.container"/></td>
-                                        <td><span t-field="move.receipt"/></td>
-                                        <td><span t-field="move.item"/></td>
-                                        <td class="text-right">
-                                            <span t-field="move.quantity"/> <span t-field="move.product_uom.name"/>
-                                        </td>
-                                    </tr>
-                                    <t t-set="total_quantity" t-value="total_quantity + move.quantity"/>
-                                </t>
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="4" class="text-right">Total:</td>
-                                    <td class="text-right"><span t-esc="total_quantity"/></td>
+                                <tr t-foreach="o.move_ids_without_package" t-as="l">
+                                    <t t-set="item" t-value="item + 1"/>
+                                    <t t-set="total_quantity" t-value="total_quantity + l.quantity"/>
+                                    <td>
+                                        <span t-esc="item"/>
+                                    </td>
+                                    <td name="td_product_description">
+                                        <span t-field="l.product_id.display_name"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-field="l.product_id.item"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <span t-esc="int(l.quantity)"/> <span t-field="l.product_uom.name"/>
+                                    </td>
                                 </tr>
-                            </tfoot>
+                            </tbody>
                         </table>
-
-                        <div class="row mt32" style="page-break-inside: avoid;">
-                            <div class="col-12">
-                                <p class="text-sm font-italic text-justify">
-                                Una vez firmado el presente documento, se entenderá como entregado en conformidad, no admitiéndose posteriormente reclamos ni observaciones.
-                                </p>
-                            </div>
+                    </div>
+                    <div class="row text-14 mt-1" style="page-break-inside: avoid;">
+                        <div class="col-4 offset-8">
+                            <table class="table-border" name="table_totals" style="width:100%;">
+                                <tr class="border-black o_subtotal">
+                                    <td><strong t-att-style="'color: %s;' % o.company_id.primary_color or 'black'">Cantidad Total</strong></td>
+                                    <td class="text-end">
+                                        <span t-esc="int(total_quantity)"/>
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
+                    </div>
+                    <div class="row mt32" style="page-break-inside: avoid;">
+                        <div class="col-12">
+                            <p class="text-sm font-italic text-justify">
+                            Una vez firmado el presente documento, se entenderá como entregado en conformidad, no admitiéndose posteriormente reclamos ni observaciones.
+                            </p>
+                        </div>
+                    </div>
 
-                        <div class="row mt64" style="page-break-inside: avoid;">
-                            <div class="col-6">
-                            </div>
-                            <div class="col-6 text-center mt64">
-                                <div style="border-top: 1px solid black; margin-top: 50px; width: 80%; margin-left: auto; margin-right: auto; padding-top: 10px;">
-                                    <strong><span t-field="o.partner_id.name"/></strong><br />
-                                    <strong><span t-field="o.partner_id.vat"/></strong>
-                                </div>
+                    <div class="row mt64" style="page-break-inside: avoid;">
+                        <div class="col-6">
+                        </div>
+                        <div class="col-6 text-center mt64">
+                            <div style="border-top: 1px solid black; margin-top: 50px; width: 80%; margin-left: auto; margin-right: auto; padding-top: 10px;">
+                                <strong><span t-field="o.partner_id.name"/></strong><br />
+                                <strong><span t-field="o.partner_id.vat"/></strong>
                             </div>
                         </div>
                     </div>

@@ -76,6 +76,11 @@
     padding: 5px;
 }
 
+.text-14,
+.text-14 span {
+    font-size: 14px;
+}
+
 .text-12,
 .text-12 span {
     font-size: 12px;

@@ -11,7 +11,7 @@
         'account',
         'sale_management',
         'purchase',
-        'stock',
+        'stock'
     ],
     'data': [
         'views/product_template_views.xml',
@@ -19,6 +19,7 @@
         'views/account_move_views.xml',
         'views/stock_move_views.xml',
         'views/purchase_order_views.xml',
+        'views/stock_picking_layouts.xml',
         'report/stock_picking_report.xml',
     ],
     'sequence': 1,
