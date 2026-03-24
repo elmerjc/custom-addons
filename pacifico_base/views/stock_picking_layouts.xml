@@ -24,7 +24,7 @@
 
   <template id="stock_picking_layout_header_custom">
     <div class="header o_company_#{company.id}_layout">
-        <div class="row p-2">
+        <div class="row p-2 my-2">
             <div class="col-2">
                 <img t-if="company.logo" style="max-width:120px; width:100%" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
             </div>
@@ -40,8 +40,8 @@
             </div>
             <div class="col-4">
                 <div class="text-center">
-                    <h5 class="font-weight-bold" t-esc="'ENTREGA N°'"/>
-                    <h5 class="font-weight-bold" t-esc="o.name"/>
+                    <strong><h6 class="font-weight-bold" t-esc="'ORDEN DE ENTREGA N°'"/></strong>
+                    <strong><h6 class="font-weight-bold" t-esc="o.name"/></strong>
                 </div>
             </div>
         </div>

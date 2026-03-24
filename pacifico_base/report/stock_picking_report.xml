@@ -24,6 +24,16 @@
                             </dl>
                         </div>
                         <div class="col-4">
+                            <dl if="o.sale_id.invoice_ids" class="row mb-0">
+                                <dt class="col-4 mb-0">
+                                    <strong>Facturas:</strong>
+                                </dt>
+                                <dd class="col-8 mb-0">
+                                    <t t-foreach="o.sale_id.invoice_ids" t-as="invoice">
+                                        <span t-field="invoice.name"/>
+                                    </t>
+                                </dd>
+                            </dl>
                             <dl class="row mb-0">
                                 <dt class="col-4 mb-0">
                                     <strong>Fecha Programada:</strong>
@@ -120,12 +130,12 @@
     </record>
 
     <record id="action_report_delivery_pacifico" model="ir.actions.report">
-        <field name="name">Detalle de Entrega</field>
+        <field name="name">Orden de Entrega</field>
         <field name="model">stock.picking</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">pacifico_base.report_delivery_pacifico</field>
         <field name="report_file">pacifico_base.report_delivery_pacifico</field>
-        <field name="print_report_name">'Detalle de Entrega - %s - %s' % (object.origin, object.partner_id.name or '')</field>
+        <field name="print_report_name">'Orden de Entrega - %s - %s' % (object.origin, object.partner_id.name or '')</field>
         <field name="binding_model_id" ref="stock.model_stock_picking"/>
         <field name="binding_type">report</field>
         <field name="paperformat_id" ref="paperformat_delivery_pacifico"/>
