@@ -15,7 +15,7 @@
                         <t t-set="quantity_total" t-value="quantity_total + l.product_uom_qty"/>
                     </t>
 
-                    <div id="header" class="row border-radius text-12 p-2">
+                    <div id="header" class="row border-radius text-14 p-2">
                         <div class="col-8">
                             <dl class="row mb-0">
                                 <dt class="col-2 mb-0">
@@ -70,7 +70,7 @@
                         </div>
                     </div>
 
-                    <div id="body" class="text-12 mt-2">
+                    <div id="body" class="text-14 mt-2">
                         <table class="table-custom mb-2" name="table_lines">
                             <thead>
                                 <th name="th_item" class="text-start"
@@ -108,7 +108,7 @@
                         </table>
                     </div>
 
-                    <div class="row text-12 mt-1" style="page-break-inside: avoid;">
+                    <div class="row text-14 mt-1" style="page-break-inside: avoid;">
                         <div class="col-4 offset-8">
                             <table class="table-border" name="table_totals" style="width:100%;">
                                 <tr class="border-black o_subtotal">
