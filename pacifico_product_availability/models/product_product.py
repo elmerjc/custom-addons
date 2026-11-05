@@ -14,7 +14,12 @@ class ProductProduct(models.Model):
     def _compute_display_name(self):
         res = super()._compute_display_name()
         for record in self:
-            record.display_name = f"{record.display_name} {record.receipt}-{record.item}"
+            details = []
+            if record.receipt:
+                details.append(record.receipt)
+            if record.item:
+                details.append(record.item)
+            record.display_name = f"{record.display_name} {' '.join(details)}"
 
         if self.env.context.get("so_product_stock_inline"):
             self = self.with_context(warehouse=self.env.context.get("warehouse"))
